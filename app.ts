@@ -1,24 +1,9 @@
-type CombineInput = number | string;
-type ReturnedType = 'as-string' | 'as-number';
-
-
-const combine = (
-  input1: CombineInput,
-  input2: CombineInput,
-  returnedType: ReturnedType = 'as-number'
-) => {
-  let result;
-
-  if (typeof input1 === 'number' && typeof input2 === "number" || returnedType === 'as-number') {
-    result = +input1 + +input2;
-  } else {
-    result = input1.toString() + input2.toString();
-  }
-
-  return result;
-
+const add = (n1: number, n2 : number) => { // inferred function type number
+  return n1 + n2;
 }
 
-console.log(combine(5, 10, 'as-string'));
-console.log(combine(5, '10'));
-console.log(combine("Alex", 'Beer', 'as-string'));
+const printResults = (number : number) : void => { // type of function that returns nothing
+  console.log("Result is: " + number);
+}
+
+printResults(add(3, 5));
