@@ -1,16 +1,15 @@
-// const person : {
-//   name : string;
-//   age: number;
-// } = {
+var Role;
+(function (Role) {
+    Role[Role["ADMIN"] = 0] = "ADMIN";
+    Role[Role["AUTHOR"] = 1] = "AUTHOR";
+    Role[Role["GUEST"] = 2] = "GUEST";
+})(Role || (Role = {}));
 var person = {
     name: "Alex",
     age: 38,
     hobbies: ["chess", "swimming"],
-    role: [1, "author"]
+    role: Role.AUTHOR
 };
-// person.role.push(10); -- allowed but incorrect
-// person.role[1] = 10;  -- error
-//person.role = [10, 10] -- error
 var favoriteActivities;
 favoriteActivities = ["sports"];
-console.log(person.name);
+console.log(person.role);
