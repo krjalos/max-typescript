@@ -1,4 +1,12 @@
-const combine = (input1: number | string, input2: number | string, returnedType: 'as-string' | 'as-number' = 'as-number') => {
+type CombineInput = number | string;
+type ReturnedType = 'as-string' | 'as-number';
+
+
+const combine = (
+  input1: CombineInput,
+  input2: CombineInput,
+  returnedType: ReturnedType = 'as-number'
+) => {
   let result;
 
   if (typeof input1 === 'number' && typeof input2 === "number" || returnedType === 'as-number') {
@@ -8,7 +16,6 @@ const combine = (input1: number | string, input2: number | string, returnedType:
   }
 
   return result;
-
 
 }
 
