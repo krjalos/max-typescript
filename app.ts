@@ -1,20 +1,15 @@
-enum Role {ADMIN, AUTHOR, GUEST}
+const combine = (input1 : number | string, input2: number | string) => {
+  let result;
 
-const person : {
-  name: string;
-  age: number;
-  hobbies: string[];
-  role: Role
-} = {
-  name: "Alex",
-  age: 38,
-  hobbies: ["chess", "swimming"],
-  role: Role.AUTHOR
+  if(typeof input1 === 'number' && typeof input2 === "number") {
+    result = input1 + input2;
+  }else {
+    result = input1.toString() + input2.toString();
+  }
+
+  return result;
 }
 
-let favoriteActivities: string[];
-
-favoriteActivities = ["sports"];
-
-
-console.log(person.role);
+console.log(combine(5, 10));
+console.log(combine(5, '10'));
+console.log(combine("Alex", 'Beer'));
