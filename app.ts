@@ -14,3 +14,10 @@ let combinedValues : (a: number, b: number) => number;
 combinedValues = add;
 
 console.log(combinedValues(7,1));
+
+
+const addAndHandle = (a: number, b: number, callback: (a: number) => void) => {
+  callback(add(a, b));
+};
+
+addAndHandle(14, 15, printResults);
