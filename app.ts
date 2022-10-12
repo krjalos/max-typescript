@@ -1,14 +1,4 @@
-let userInput: unknown;
-let userName: string;
+let bla: number;
 
-userInput = "Alex";
-
-if(typeof userInput === 'string') {
-  userName = userInput;
-}
-
-const generateError = (message: string, code: number): never => {
-  throw {message: message, errorCode: code};
-}
-
-generateError("test error", 400);
+bla = 5;
+console.log(bla + 1);

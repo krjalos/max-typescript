@@ -1,10 +1,4 @@
-var userInput;
-var userName;
-userInput = "Alex";
-if (typeof userInput === 'string') {
-    userName = userInput;
-}
-var generateError = function (message, code) {
-    throw { message: message, errorCode: code };
-};
-generateError("test error", 400);
+"use strict";
+let bla;
+bla = 5;
+console.log(bla + 1);
