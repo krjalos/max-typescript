@@ -1,4 +1,4 @@
 let bla: number;
 
-bla = "lskdf";
+bla = 5;
 console.log(bla + 2);
