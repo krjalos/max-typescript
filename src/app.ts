@@ -1,4 +1,11 @@
-let bla: number;
+class Department {
+  name: string;
 
-bla = 5;
-console.log(bla + 2);
+  constructor(init: { name : string;}) {
+    this.name = init.name;
+  }
+}
+
+const it = new Department({name: "IT"});
+
+console.log(it);
