@@ -12,3 +12,4 @@ const combine = (input1, input2, returnedType = 'as-number') => {
 console.log(combine(5, 10, 'as-string'));
 console.log(combine(5, '10'));
 console.log(combine("Alex", 'Beer', 'as-string'));
+//# sourceMappingURL=_union-aliases.js.map

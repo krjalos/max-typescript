@@ -14,3 +14,4 @@ const person = {
 let favoriteActivities;
 favoriteActivities = ["sports"];
 console.log(person.role);
+//# sourceMappingURL=_basic-types.js.map
