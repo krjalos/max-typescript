@@ -1,10 +1,10 @@
 class Department {
-  name: string;
+  // name: string;
   private employees : string[] = [];
   #latestPrivate: string = "Test private sting";
 
-  constructor(init: { name : string;}) {
-    this.name = init.name;
+  constructor(public name : string) {
+    this.name = name;
   }
 
   printName(this : Department) {
@@ -21,7 +21,7 @@ class Department {
   }
 }
 
-const it = new Department({name: "IT"});
+const it = new Department("IT");
 
 it.addEmployee("Alex");
 it.addEmployee("Maria");

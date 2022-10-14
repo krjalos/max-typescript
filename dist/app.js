@@ -6,10 +6,12 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 };
 var _Department_latestPrivate;
 class Department {
-    constructor(init) {
+    constructor(name) {
+        this.name = name;
+        // name: string;
         this.employees = [];
         _Department_latestPrivate.set(this, "Test private sting");
-        this.name = init.name;
+        this.name = name;
     }
     printName() {
         console.log(`This department name is ${this.name}`);
@@ -23,7 +25,7 @@ class Department {
     }
 }
 _Department_latestPrivate = new WeakMap();
-const it = new Department({ name: "IT" });
+const it = new Department("IT");
 it.addEmployee("Alex");
 it.addEmployee("Maria");
 it.addEmployee("Mira");
