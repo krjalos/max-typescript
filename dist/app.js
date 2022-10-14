@@ -9,7 +9,6 @@ class Department {
     constructor(name, id) {
         this.name = name;
         this.id = id;
-        // name: string;
         this.employees = [];
         _Department_latestPrivate.set(this, "Test private sting");
         this.name = name;
@@ -33,4 +32,16 @@ it.addEmployee("Mira");
 it.printName();
 it.printLatestPrivate();
 console.log(it);
+class Admins extends Department {
+    constructor(name, id, admins) {
+        super(name, id);
+        this.admins = admins;
+    }
+    printAdmins() {
+        console.log(this.admins);
+    }
+}
+const admins = new Admins("Admins", 2, ["Alex", "Mira"]);
+admins.printAdmins();
+console.log(admins);
 //# sourceMappingURL=app.js.map
