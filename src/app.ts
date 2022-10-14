@@ -1,5 +1,5 @@
 class Department {
-  private employees : string[] = [];
+  protected employees : string[] = [];
   #latestPrivate: string = "Test private sting";
 
   constructor(public name : string, public readonly id: number) {
@@ -39,10 +39,15 @@ class Admins extends Department {
   printAdmins(){
     console.log(this.admins);
   }
+
+  addEmployee(name: string) {
+    this.employees.push(name);
+  }
 }
 
 const admins = new Admins("Admins", 2, ["Alex", "Mira"]);
 
 admins.printAdmins();
+admins.printLatestPrivate();
 
 console.log(admins);

@@ -40,8 +40,12 @@ class Admins extends Department {
     printAdmins() {
         console.log(this.admins);
     }
+    addEmployee(name) {
+        this.employees.push(name);
+    }
 }
 const admins = new Admins("Admins", 2, ["Alex", "Mira"]);
 admins.printAdmins();
+admins.printLatestPrivate();
 console.log(admins);
 //# sourceMappingURL=app.js.map
