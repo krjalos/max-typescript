@@ -1,4 +1,5 @@
-class Department {
+abstract class Department {
+  static deptGuide = "http://guide.com/url";
   protected employees : string[] = [];
   #latestPrivate: string = "Test private sting";
 
@@ -20,10 +21,11 @@ class Department {
     this.name = name;
   }
 
-  printName(this : Department) {
-    console.log(`This department name is ${this.name}`);
-    console.log(`This department employees are ${this.employees}`);
+  static createEmployee (name: string) {
+    return {name:name, id: Math.random()}
   }
+
+  abstract printName(this : Department): void;
 
   addEmployee(name: string) {
     this.employees.push(name);
@@ -33,26 +35,31 @@ class Department {
     console.log(this.#latestPrivate);
   }
 }
-
-const it = new Department("IT", 1);
-
-it.addEmployee("Alex");
-it.addEmployee("Maria");
-it.addEmployee("Mira");
-
-it.printName();
-it.printLatestPrivate();
-it.latestPrivate = "Latest private is set";
-
-console.log(it.latestPrivate);
-
-console.log(it);
+//
+// const it = new Department("IT", 1);
+//
+// it.addEmployee("Alex");
+// it.addEmployee("Maria");
+// it.addEmployee("Mira");
+//
+// it.printName();
+// it.printLatestPrivate();
+// it.latestPrivate = "Latest private is set";
+//
+// console.log(it.latestPrivate);
+//
+// console.log(it);
 
 class Admins extends Department {
   #masterPass : number = 123123;
 
   constructor(name: string, id: number, public admins: string[]) {
     super(name, id);
+  }
+
+  printName() {
+    console.log(`This department name is ${this.name}`);
+    console.log(`This department employees are ${this.employees}`);
   }
 
   printAdmins(){
@@ -73,5 +80,11 @@ const admins = new Admins("Admins", 2, ["Alex", "Mira"]);
 admins.printAdmins();
 admins.printLatestPrivate();
 admins.getMasterPass();
+admins.printName();
 
 console.log(admins);
+
+
+console.log("_____________");
+console.log(Department.deptGuide);
+console.log(Department.createEmployee("Alex"));

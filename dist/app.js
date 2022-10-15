@@ -32,9 +32,8 @@ class Department {
             __classPrivateFieldSet(this, _Department_latestPrivate, newString, "f");
         }
     }
-    printName() {
-        console.log(`This department name is ${this.name}`);
-        console.log(`This department employees are ${this.employees}`);
+    static createEmployee(name) {
+        return { name: name, id: Math.random() };
     }
     addEmployee(name) {
         this.employees.push(name);
@@ -44,20 +43,30 @@ class Department {
     }
 }
 _Department_latestPrivate = new WeakMap();
-const it = new Department("IT", 1);
-it.addEmployee("Alex");
-it.addEmployee("Maria");
-it.addEmployee("Mira");
-it.printName();
-it.printLatestPrivate();
-it.latestPrivate = "Latest private is set";
-console.log(it.latestPrivate);
-console.log(it);
+Department.deptGuide = "http://guide.com/url";
+//
+// const it = new Department("IT", 1);
+//
+// it.addEmployee("Alex");
+// it.addEmployee("Maria");
+// it.addEmployee("Mira");
+//
+// it.printName();
+// it.printLatestPrivate();
+// it.latestPrivate = "Latest private is set";
+//
+// console.log(it.latestPrivate);
+//
+// console.log(it);
 class Admins extends Department {
     constructor(name, id, admins) {
         super(name, id);
         this.admins = admins;
         _Admins_masterPass.set(this, 123123);
+    }
+    printName() {
+        console.log(`This department name is ${this.name}`);
+        console.log(`This department employees are ${this.employees}`);
     }
     printAdmins() {
         console.log(this.admins);
@@ -74,5 +83,9 @@ const admins = new Admins("Admins", 2, ["Alex", "Mira"]);
 admins.printAdmins();
 admins.printLatestPrivate();
 admins.getMasterPass();
+admins.printName();
 console.log(admins);
+console.log("_____________");
+console.log(Department.deptGuide);
+console.log(Department.createEmployee("Alex"));
 //# sourceMappingURL=app.js.map
