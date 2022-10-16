@@ -1,4 +1,9 @@
 "use strict";
+let add;
+add = (a, b) => {
+    return a + b;
+};
+console.log(add(5, 7));
 class employee {
     constructor(name, age) {
         this.name = name;

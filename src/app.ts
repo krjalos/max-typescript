@@ -1,5 +1,21 @@
-interface Person {
+interface FuncInt {
+  (a: number, b: number): number;
+}
+
+let add: FuncInt;
+
+add = (a: number, b:number) => {
+  return a + b;
+}
+
+console.log(add(5, 7));
+
+
+interface human {
   name: string;
+}
+
+interface Person extends human{
   age: number;
 
   print (connector: string): void;
