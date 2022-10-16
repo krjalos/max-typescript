@@ -16,20 +16,24 @@ interface human {
 }
 
 interface Person extends human{
-  age: number;
+  age?: number;
 
   print (connector: string): void;
 }
 
 class employee implements Person {
   name: string;
-  age: number;
+  age?: number;
   position: string;
 
-  constructor (name: string, age: number) {
+  constructor (name: string, age?: number) {
     this.name = name;
-    this.age = age;
     this.position = "Accountant";
+
+    if(age) {
+      this.age = age;
+    }else {}
+    this.age = 0;
   }
 
   print (connector: string) {

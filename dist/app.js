@@ -7,8 +7,12 @@ console.log(add(5, 7));
 class employee {
     constructor(name, age) {
         this.name = name;
-        this.age = age;
         this.position = "Accountant";
+        if (age) {
+            this.age = age;
+        }
+        else { }
+        this.age = 0;
     }
     print(connector) {
         console.log(`${this.name} ${connector} ${this.age}`);
