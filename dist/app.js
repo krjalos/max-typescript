@@ -58,4 +58,13 @@ const v1Owner = {
     age: 28,
     licenseNumber: 12345
 };
+function add(a, b) {
+    if (typeof a === "string" || typeof b === "string") {
+        return a.toString() + b.toString();
+    }
+    else {
+        return +a + +b;
+    }
+}
+console.log(add("Alex", " mira").split(" "));
 //# sourceMappingURL=app.js.map
