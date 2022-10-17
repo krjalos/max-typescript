@@ -27,6 +27,7 @@
 // let param: VechicleParam;
 //
 // param = 12;
+var _a;
 class Car {
     drive() {
         console.log("Driving");
@@ -67,4 +68,13 @@ function add(a, b) {
     }
 }
 console.log(add("Alex", " mira").split(" "));
+const fetchUserData = {
+    name: "alex",
+    age: 38,
+    job: {
+        title: "CEO",
+        company: "FIE"
+    }
+};
+console.log((_a = fetchUserData.job) === null || _a === void 0 ? void 0 : _a.title);
 //# sourceMappingURL=app.js.map

@@ -86,3 +86,15 @@ function add(a: Combinable, b: Combinable){
 }
 
 console.log(add("Alex", " mira").split(" "));
+
+
+const fetchUserData = {
+  name: "alex",
+  age: 38,
+  job: { // Optional
+    title:"CEO",
+    company:"FIE"
+  }
+}
+
+console.log(fetchUserData.job?.title);
