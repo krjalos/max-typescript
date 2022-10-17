@@ -8,12 +8,16 @@
 // @Logger("Logging person")
 
 function Template(customHtml: string, id: string){
-  return (constructor: any) => {
-    const element = document.getElementById(id) as HTMLElement;
-    element!.innerHTML = customHtml;
-    const person = new constructor();
+  return function<T extends {new (...args: any[]) : {name: string}}>(originalConstructor: T) {
+    return class extends originalConstructor{
+      constructor(..._: any[]) {
+        super();
 
-    element!.querySelector('h1')!.innerHTML = person.name;
+        const element = document.getElementById(id) as HTMLElement;
+        element!.innerHTML = customHtml;
+        element!.querySelector('h1')!.innerHTML = this.name;
+      }
+    }
   }
 }
 

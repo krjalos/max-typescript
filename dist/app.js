@@ -17,11 +17,15 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 function Template(customHtml, id) {
-    return (constructor) => {
-        const element = document.getElementById(id);
-        element.innerHTML = customHtml;
-        const person = new constructor();
-        element.querySelector('h1').innerHTML = person.name;
+    return function (originalConstructor) {
+        return class extends originalConstructor {
+            constructor(..._) {
+                super();
+                const element = document.getElementById(id);
+                element.innerHTML = customHtml;
+                element.querySelector('h1').innerHTML = this.name;
+            }
+        };
     };
 }
 let Person = class Person {
