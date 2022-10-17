@@ -39,4 +39,13 @@ const numberStore = new store();
 numberStore.addValue(1);
 const stringStore = new store();
 stringStore.addValue("sdf");
+function addCourse(title, description) {
+    let course = {};
+    course.title = title;
+    course.description = description;
+    return course;
+}
+console.log(addCourse("Type", "Best Course"));
+const admins = ["Alex", "Mira"];
+// admins.push(); - Not working
 //# sourceMappingURL=app.js.map

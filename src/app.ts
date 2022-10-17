@@ -58,3 +58,22 @@ numberStore.addValue(1);
 const stringStore = new store<string>();
 
 stringStore.addValue("sdf");
+
+interface Course {
+  title: string,
+  description: string;
+}
+
+function addCourse(title: string, description:string): Course {
+  let course: Partial<Course> = {};
+  course.title = title;
+  course.description = description;
+
+  return course as Course;
+}
+
+console.log(addCourse("Type", "Best Course"));
+
+const admins: Readonly<string[]> = ["Alex", "Mira"];
+
+// admins.push(); - Not working
