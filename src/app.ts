@@ -98,3 +98,7 @@ const fetchUserData = {
 }
 
 console.log(fetchUserData.job?.title);
+
+const unknown = "";
+
+const anotherVar = unknown ?? "DEFAULT"; // DEFAULT on case unknown is null or undefined

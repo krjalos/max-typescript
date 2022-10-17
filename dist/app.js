@@ -77,4 +77,6 @@ const fetchUserData = {
     }
 };
 console.log((_a = fetchUserData.job) === null || _a === void 0 ? void 0 : _a.title);
+const unknown = "";
+const anotherVar = unknown !== null && unknown !== void 0 ? unknown : "DEFAULT"; // DEFAULT on case unknown is null or undefined
 //# sourceMappingURL=app.js.map
