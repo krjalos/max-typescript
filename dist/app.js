@@ -24,4 +24,19 @@ function extractValue(a, b) {
     return a[b];
 }
 console.log(extractValue({ name: "Alex" }, "name"));
+class store {
+    constructor() {
+        this.stored = [];
+    }
+    addValue(value) {
+        this.stored.push(value);
+    }
+    printStore() {
+        console.log(this.stored);
+    }
+}
+const numberStore = new store();
+numberStore.addValue(1);
+const stringStore = new store();
+stringStore.addValue("sdf");
 //# sourceMappingURL=app.js.map

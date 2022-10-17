@@ -37,3 +37,24 @@ function extractValue<T extends object, U extends keyof T>(a: T, b: U) {
 }
 
 console.log(extractValue({name: "Alex"}, "name"));
+
+
+class store<T> {
+  private stored:T[] = [];
+
+  addValue(value: T) {
+    this.stored.push(value);
+  }
+
+  printStore() {
+    console.log(this.stored);
+  }
+}
+
+const numberStore = new store<number>();
+
+numberStore.addValue(1);
+
+const stringStore = new store<string>();
+
+stringStore.addValue("sdf");
