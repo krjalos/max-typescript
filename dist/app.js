@@ -20,4 +20,8 @@ function count(a) {
 }
 console.log(count("Alex"));
 console.log(count([1, 2, 3]));
+function extractValue(a, b) {
+    return a[b];
+}
+console.log(extractValue({ name: "Alex" }, "name"));
 //# sourceMappingURL=app.js.map

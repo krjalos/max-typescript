@@ -29,3 +29,11 @@ function count<T extends {length: number}>(a: T): [T, number] {
 
 console.log(count("Alex"));
 console.log(count([1, 2, 3]));
+
+
+
+function extractValue<T extends object, U extends keyof T>(a: T, b: U) {
+  return a[b];
+}
+
+console.log(extractValue({name: "Alex"}, "name"));
