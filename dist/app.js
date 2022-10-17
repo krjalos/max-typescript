@@ -50,4 +50,12 @@ const newVechicle = (vechicle) => {
 };
 newVechicle(v1);
 newVechicle(v2);
+const userInput = document.getElementById("user-input");
+const userInput2 = document.getElementById("user-input");
+console.log(userInput.value);
+console.log(userInput2.value);
+const v1Owner = {
+    age: 28,
+    licenseNumber: 12345
+};
 //# sourceMappingURL=app.js.map

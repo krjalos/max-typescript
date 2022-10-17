@@ -57,3 +57,18 @@ const newVechicle = (vechicle : Vechicle) => {
 
 newVechicle(v1);
 newVechicle(v2);
+
+const userInput = <HTMLInputElement>document.getElementById("user-input")!;
+const userInput2 = document.getElementById("user-input")! as HTMLInputElement;
+
+console.log(userInput.value);
+console.log(userInput2.value);
+
+interface Owner {
+  [prop: string]: number;
+}
+
+const v1Owner: Owner = {
+  age: 28,
+  licenseNumber: 12345
+}
