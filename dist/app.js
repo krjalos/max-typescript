@@ -15,4 +15,9 @@ function merge(a, b) {
 }
 const merged = merge({ name: "Alex" }, { age: 28 });
 console.log(merged.name);
+function count(a) {
+    return [a, a.length];
+}
+console.log(count("Alex"));
+console.log(count([1, 2, 3]));
 //# sourceMappingURL=app.js.map

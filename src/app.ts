@@ -22,3 +22,10 @@ function merge<T extends object, U extends object>(a: T, b: U) {
 const merged = merge({name: "Alex"}, {age: 28});
 
 console.log(merged.name);
+
+function count<T extends {length: number}>(a: T): [T, number] {
+  return [a, a.length];
+}
+
+console.log(count("Alex"));
+console.log(count([1, 2, 3]));
