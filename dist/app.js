@@ -85,4 +85,32 @@ __decorate([
     Log2,
     __param(0, Log3)
 ], Course.prototype, "getIncome", null);
+function Autobind(_, _2, descriptior) {
+    const originalMethod = descriptior.value;
+    const adjustedDescriptor = {
+        configurable: true,
+        enumerable: false,
+        get() {
+            const boundFunction = originalMethod.bind(this);
+            return boundFunction;
+        }
+    };
+    return adjustedDescriptor;
+}
+class Printer {
+    constructor() {
+        this.message = "Clicked times: ";
+        this.counter = 0;
+    }
+    showMessage() {
+        console.log(this.message + this.counter++);
+    }
+}
+__decorate([
+    Autobind
+], Printer.prototype, "showMessage", null);
+const buttonPrinter = new Printer();
+const button = document.querySelector('button');
+console.log(button);
+button.addEventListener("click", buttonPrinter.showMessage);
 //# sourceMappingURL=app.js.map

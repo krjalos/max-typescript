@@ -85,3 +85,35 @@ class Course {
     return this._attendees_number * price;
   }
 }
+
+
+function Autobind(_: any, _2: string | any, descriptior: PropertyDescriptor) {
+  const originalMethod = descriptior.value;
+  const adjustedDescriptor: PropertyDescriptor = {
+    configurable: true,
+    enumerable: false,
+    get() {
+      const boundFunction = originalMethod.bind(this);
+      return boundFunction;
+    }
+  }
+
+  return adjustedDescriptor;
+}
+
+class Printer {
+  message = "Clicked times: ";
+  counter = 0;
+
+  @Autobind
+  showMessage() {
+    console.log(this.message + this.counter++);
+  }
+}
+
+const buttonPrinter = new Printer();
+
+const button = document.querySelector('button')!;
+console.log(button);
+
+button.addEventListener("click", buttonPrinter.showMessage);
