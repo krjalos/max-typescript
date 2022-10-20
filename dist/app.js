@@ -1,116 +1,218 @@
 "use strict";
-// function Logger(identifier: string){
-//   return (constructor: Function) => {
-//     console.log(identifier);
-//     console.log(constructor);
-//   }
-// }
-//
-// @Logger("Logging person")
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-function Template(customHtml, id) {
-    return function (originalConstructor) {
-        return class extends originalConstructor {
-            constructor(..._) {
-                super();
-                const element = document.getElementById(id);
-                element.innerHTML = customHtml;
-                element.querySelector('h1').innerHTML = this.name;
+var Status;
+(function (Status) {
+    Status[Status["Active"] = 0] = "Active";
+    Status[Status["Finished"] = 1] = "Finished";
+})(Status || (Status = {}));
+function validate(fields) {
+    let isValid = true;
+    for (const field of fields) {
+        for (const criteria in field) {
+            switch (criteria) {
+                case "required":
+                    isValid = isValid && field.value.length > 0;
+                    !isValid && alert(`${field.name} is required`);
+                    break;
+                case "minLength":
+                    isValid = isValid && field.value.length >= field[criteria];
+                    !isValid && alert(`${field.name} should be at least ${field[criteria]} chars long`);
+                    break;
+                case "maxLength":
+                    isValid = isValid && field.value.length <= field[criteria];
+                    !isValid && alert(`${field.name} should be max ${field[criteria]} chars long`);
+                    break;
+                case "min":
+                    isValid = isValid && +field.value >= field[criteria];
+                    !isValid && alert(`${field.name} should be min ${field[criteria]}`);
+                    break;
+                case "max":
+                    isValid = isValid && +field.value <= field[criteria];
+                    !isValid && alert(`${field.name} should be min ${field[criteria]}`);
+                    break;
             }
-        };
-    };
-}
-let Person = class Person {
-    constructor() {
-        this.name = "Alex";
-        console.log("Constructing");
-    }
-};
-Person = __decorate([
-    Template("<h1></h1>", "root")
-], Person);
-const alex = new Person();
-console.log(alex);
-function Log(target, propertyName) {
-    console.log("_________");
-    console.log(target);
-    console.log(propertyName);
-}
-function Log2(target, name, descriptor) {
-    console.log("_________");
-    console.log(target);
-    console.log(name);
-    console.log(descriptor);
-}
-function Log3(target, name, position) {
-    console.log("_________1");
-    console.log(target);
-    console.log(name);
-    console.log(position);
-}
-class Course {
-    constructor(title, description) {
-        this._attendees_number = 0;
-        this.title = title;
-        this.description = description;
-        this.id = Math.floor(Math.random() * 100);
-    }
-    set attendees(attendee) {
-        if (attendee > 0) {
-            this._attendees_number = attendee;
+            if (!isValid) {
+                return false;
+            }
+        }
+        if (!isValid) {
+            return false;
         }
     }
-    get attendees() {
-        return this._attendees_number;
-    }
-    getIncome(price) {
-        return this._attendees_number * price;
-    }
+    return isValid;
 }
-__decorate([
-    Log
-], Course.prototype, "title", void 0);
-__decorate([
-    Log2
-], Course.prototype, "attendees", null);
-__decorate([
-    Log2,
-    __param(0, Log3)
-], Course.prototype, "getIncome", null);
-function Autobind(_, _2, descriptior) {
-    const originalMethod = descriptior.value;
-    const adjustedDescriptor = {
-        configurable: true,
+function Autobind(_, _2, descriptor) {
+    const originalDescriptor = descriptor.value;
+    const updatedMethod = {
         enumerable: false,
+        configurable: true,
         get() {
-            const boundFunction = originalMethod.bind(this);
-            return boundFunction;
+            return originalDescriptor.bind(this);
         }
     };
-    return adjustedDescriptor;
+    return updatedMethod;
 }
-class Printer {
-    constructor() {
-        this.message = "Clicked times: ";
-        this.counter = 0;
+class Project {
+    constructor(project) {
+        this.id = Math.floor(Math.random() * 1000000);
+        this.title = project.title;
+        this.description = project.description;
+        this.people = project.people;
+        this.status = Status.Active;
     }
-    showMessage() {
-        console.log(this.message + this.counter++);
+    toggleStatus(type) {
+        this.status = type === "active" ? Status.Active : Status.Finished;
+    }
+}
+const DUMMY_PROJECTS = [
+    new Project({ title: "Test Title", description: "Lorem ipsim", people: 5 }),
+    new Project({ title: "Dolor sit amet", description: "Test super descriptioin", people: 9 }),
+    new Project({ title: "Nothing to see here", description: "Yep, yep", people: 2 }),
+];
+class ProjectState {
+    constructor() {
+        this.projects = DUMMY_PROJECTS.slice();
+        this.listeners = [];
+    }
+    static getInstance() {
+        if (this.instance) {
+            return this.instance;
+        }
+        this.instance = new ProjectState();
+        return this.instance;
+    }
+    addProject(project) {
+        const newProject = new Project(project);
+        this.projects.push(newProject);
+        for (const listenerFn of this.listeners) {
+            listenerFn(Object.assign({}, newProject), "add");
+        }
+    }
+    toggleProject(id, type) {
+        const projectIndex = this.projects.findIndex(p => p.id === id);
+        this.projects[projectIndex].toggleStatus(type);
+    }
+    getAllProjects() {
+        return this.projects.slice();
+    }
+}
+const projectState = ProjectState.getInstance();
+class Component {
+    constructor(templateId, appId) {
+        this.app = document.getElementById(appId);
+        const template = document.getElementById(templateId);
+        const elementNode = document.importNode(template.content, true);
+        this.element = elementNode.firstElementChild;
+        this.build();
+    }
+    build() {
+        this.app.appendChild(this.element);
+    }
+}
+class ProjectInput extends Component {
+    constructor(templateId, appId) {
+        super(templateId, appId);
+        this.app = document.getElementById(appId);
+        this.element.id = "user-input";
+        this.titleElement = this.element.querySelector("#title");
+        this.descriptionElement = this.element.querySelector("#description");
+        this.peopleElement = this.element.querySelector("#people");
+        this.initialise();
+    }
+    initialise() {
+        this.element.addEventListener('submit', this.processForm);
+    }
+    getValidated() {
+        const title = this.titleElement.value;
+        const description = this.descriptionElement.value;
+        const people = this.peopleElement.value;
+        if (validate([
+            { name: "Title", value: title, required: true, minLength: 2, maxLength: 10 },
+            { name: "Description", value: description, required: true, minLength: 5, maxLength: 100 },
+            { name: "People", value: people, required: true, min: 2, max: 10 }
+        ])) {
+            return { title: title, description: description, people: +people };
+        }
+        else {
+            return;
+        }
+    }
+    processForm(event) {
+        event.preventDefault();
+        const validated = this.getValidated();
+        if (validated) {
+            projectState.addProject(validated);
+        }
     }
 }
 __decorate([
     Autobind
-], Printer.prototype, "showMessage", null);
-const buttonPrinter = new Printer();
-const button = document.querySelector('button');
-console.log(button);
-button.addEventListener("click", buttonPrinter.showMessage);
+], ProjectInput.prototype, "processForm", null);
+class ProjectList extends Component {
+    constructor(projectListId, appId, singleProjectId, type) {
+        super(projectListId, appId);
+        this.type = type;
+        this.projectListElement = this.element.querySelector('.projects ul');
+        const singleProjectTemplate = document.getElementById(singleProjectId);
+        const singleProjectNode = document.importNode(singleProjectTemplate.content, true);
+        this.singleProjectWrapper = singleProjectNode.firstElementChild;
+        this.initialise();
+        this.setupListeners();
+    }
+    allowDrop(e) {
+        e.preventDefault();
+    }
+    drop(e) {
+        e.preventDefault();
+        const data = e.dataTransfer.getData("text");
+        this.projectListElement.appendChild(document.querySelector(`[data-id="${data}"]`));
+        projectState.toggleProject(+data, this.type);
+    }
+    drag(e) {
+        const element = e.target;
+        const projectId = element.getAttribute('data-id');
+        e.dataTransfer.setData("text", projectId);
+    }
+    initialise() {
+        this.element.id = `${this.type}-projects`;
+        this.element.querySelector("h2").innerHTML = `${this.type.toUpperCase()} PROJECTS`;
+        this.projectListElement.addEventListener("dragover", this.allowDrop);
+        this.projectListElement.addEventListener("drop", this.drop);
+        if (this.type === "active") {
+            const initialProjects = projectState.getAllProjects();
+            for (const project of initialProjects) {
+                this.addProject(project);
+            }
+        }
+    }
+    addProject(project) {
+        const projectContent = `<div><h2>${project.title}</h2><h3>${project.people}</h3><p>${project.description}</p></div>`;
+        const li = this.singleProjectWrapper.cloneNode(true);
+        li.innerHTML = projectContent;
+        li.setAttribute("data-id", project.id.toString());
+        li.setAttribute("draggable", "true");
+        li.addEventListener("dragstart", this.drag);
+        this.projectListElement.prepend(li);
+    }
+    setupListeners() {
+        if (this.type === "active") {
+            projectState.listeners.push((project, type) => {
+                if (type === "add") {
+                    this.addProject(project);
+                }
+            });
+        }
+    }
+}
+__decorate([
+    Autobind
+], ProjectList.prototype, "drop", null);
+const projectInput = new ProjectInput('project-input', 'app');
+const activeProjects = new ProjectList('project-list', 'app', "single-project", "active");
+const finishedProjects = new ProjectList('project-list', 'app', "single-project", "finished");
 //# sourceMappingURL=app.js.map

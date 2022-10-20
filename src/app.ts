@@ -1,119 +1,290 @@
-// function Logger(identifier: string){
-//   return (constructor: Function) => {
-//     console.log(identifier);
-//     console.log(constructor);
-//   }
-// }
-//
-// @Logger("Logging person")
+enum Status {Active, Finished}
 
-function Template(customHtml: string, id: string){
-  return function<T extends {new (...args: any[]) : {name: string}}>(originalConstructor: T) {
-    return class extends originalConstructor{
-      constructor(..._: any[]) {
-        super();
+type ProjectCoreType = {
+  title:string;
+  description:string;
+  people:number;
+}
 
-        const element = document.getElementById(id) as HTMLElement;
-        element!.innerHTML = customHtml;
-        element!.querySelector('h1')!.innerHTML = this.name;
+interface Field {
+  value: string;
+  name: string;
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  min?: number;
+  max?: number;
+}
+
+type Listener = (project: Project, type: "add" | "toggle") => void;
+
+function validate(fields: Field[]): boolean {
+  let isValid = true;
+
+  for (const field of fields) {
+    for (const criteria in field) {
+      switch (criteria) {
+        case "required":
+          isValid = isValid && field.value.length > 0;
+          !isValid && alert(`${field.name} is required`);
+          break;
+        case "minLength":
+          isValid = isValid && field.value.length >= field[criteria]!;
+          !isValid && alert(`${field.name} should be at least ${field[criteria]} chars long`);
+          break;
+        case "maxLength":
+          isValid = isValid && field.value.length <= field[criteria]!;
+          !isValid && alert(`${field.name} should be max ${field[criteria]} chars long`);
+          break;
+        case "min":
+          isValid = isValid && +field.value >= field[criteria]!;
+          !isValid && alert(`${field.name} should be min ${field[criteria]}`);
+          break;
+        case "max":
+          isValid = isValid && +field.value <= field[criteria]!;
+          !isValid && alert(`${field.name} should be min ${field[criteria]}`);
+          break;
+      }
+      if(!isValid) {
+        return false;
+      }
+    }
+    if(!isValid) {
+      return false;
+    }
+  }
+
+  return isValid;
+}
+
+function Autobind(_: any, _2: string | symbol, descriptor: PropertyDescriptor) {
+  const originalDescriptor = descriptor.value;
+
+  const updatedMethod: PropertyDescriptor = {
+    enumerable: false,
+    configurable: true,
+    get() {
+      return originalDescriptor.bind(this);
+    }
+  }
+  return updatedMethod;
+}
+
+class Project {
+  id: number;
+  title: string;
+  description: string;
+  people: number;
+  status: Status;
+
+  constructor(project: ProjectCoreType) {
+    this.id = Math.floor(Math.random() * 1000000);
+    this.title = project.title;
+    this.description = project.description;
+    this.people = project.people;
+    this.status = Status.Active;
+  }
+
+  toggleStatus (type: string){
+    this.status = type === "active" ? Status.Active : Status.Finished;
+  }
+
+  render() {
+    return `<div><h2>${this.title}</h2><h3>${this.people}</h3><p>${this.description}</p></div>`;
+  }
+}
+
+const DUMMY_PROJECTS = [
+  new Project({title: "Test Title", description: "Lorem ipsim", people: 5}),
+  new Project({title: "Dolor sit amet", description: "Test super descriptioin", people: 9}),
+  new Project({title: "Nothing to see here", description: "Yep, yep", people: 2}),
+]
+
+class ProjectState {
+  private projects: Project[] = DUMMY_PROJECTS.slice();
+  private static instance: ProjectState;
+  listeners: Listener[] = [];
+
+  private constructor() {}
+
+  static getInstance() {
+    if(this.instance) {
+      return this.instance;
+    }
+    this.instance = new ProjectState();
+    return this.instance;
+  }
+
+  addProject(project: ProjectCoreType) {
+    const newProject = new Project(project);
+    this.projects.push(newProject);
+
+    for(const listenerFn of this.listeners){
+      listenerFn({...newProject}, "add");
+    }
+  }
+
+  toggleProject(id: number, type: string): void{
+    const projectIndex = this.projects.findIndex(p => p.id === id);
+    this.projects[projectIndex].toggleStatus(type);
+  }
+
+  getAllProjects() {
+    return this.projects.slice();
+  }
+}
+
+const projectState = ProjectState.getInstance();
+
+abstract class Component<T extends HTMLElement> {
+  app: HTMLElement;
+  element: T;
+
+  constructor(templateId: string, appId: string) {
+    this.app = document.getElementById(appId)!;
+
+    const template = document.getElementById(templateId)! as HTMLTemplateElement;
+    const elementNode = document.importNode(template.content, true);
+    this.element = elementNode.firstElementChild as T;
+
+    this.build();
+  }
+
+  build() {
+    this.app.appendChild(this.element);
+  }
+}
+
+class ProjectInput extends Component<HTMLFormElement> {
+  titleElement: HTMLInputElement;
+  descriptionElement: HTMLInputElement;
+  peopleElement: HTMLInputElement;
+
+  constructor(templateId: string, appId: string) {
+    super(templateId, appId);
+    this.app = document.getElementById(appId)! as HTMLElement;
+
+    this.element.id = "user-input";
+
+    this.titleElement = this.element.querySelector("#title")! as HTMLInputElement;
+    this.descriptionElement = this.element.querySelector("#description")! as HTMLInputElement;
+    this.peopleElement = this.element.querySelector("#people")! as HTMLInputElement;
+
+    this.initialise();
+  }
+
+  initialise() {
+    this.element.addEventListener('submit', this.processForm);
+  }
+
+  getValidated(): {title: string, description: string, people: number} | void{
+    const title = this.titleElement.value;
+
+    const description = this.descriptionElement.value;
+
+    const people = this.peopleElement.value;
+
+    if(validate([
+      {name: "Title", value: title, required: true, minLength: 2, maxLength: 10},
+      {name: "Description", value: description, required: true, minLength: 5, maxLength: 100},
+      {name: "People", value: people, required: true, min: 2, max: 10}
+    ])){
+      return {title: title, description: description, people: +people};
+    }else {
+      return;
+    }
+  }
+
+  @Autobind
+  processForm(event: SubmitEvent) {
+    event.preventDefault();
+
+    const validated = this.getValidated();
+
+    if (validated) {
+      projectState.addProject(validated);
+    }
+  }
+}
+
+class ProjectList extends Component<HTMLElement>{
+  projectListElement: HTMLElement;
+  singleProjectWrapper: HTMLElement;
+
+  constructor (projectListId: string, appId: string, singleProjectId: string,  private type: "active" | "finished") {
+    super(projectListId, appId);
+
+    this.projectListElement = this.element.querySelector('.projects ul')! as HTMLFormElement;
+
+    const singleProjectTemplate = document.getElementById(singleProjectId)! as HTMLTemplateElement;
+    const singleProjectNode = document.importNode(singleProjectTemplate.content, true);
+    this.singleProjectWrapper = singleProjectNode.firstElementChild! as HTMLElement;
+
+    this.initialise();
+    this.setupListeners();
+  }
+
+  allowDrop(e: DragEvent) {
+    e.preventDefault();
+  }
+
+  @Autobind
+  drop(e: DragEvent) {
+    e.preventDefault();
+    const data = e.dataTransfer!.getData("text");
+    this.projectListElement.appendChild(document.querySelector(`[data-id="${data}"]`)!);
+    projectState.toggleProject(+data, this.type);
+  }
+
+  drag(e: DragEvent) {
+    const element = e.target as HTMLElement;
+    const projectId = element.getAttribute('data-id')!;
+    e.dataTransfer!.setData("text", projectId);
+  }
+
+  initialise() {
+    this.element.id = `${this.type}-projects`;
+    this.element.querySelector("h2")!.innerHTML = `${this.type.toUpperCase()} PROJECTS`;
+
+    this.projectListElement.addEventListener("dragover", this.allowDrop);
+    this.projectListElement.addEventListener("drop", this.drop);
+
+    if(this.type === "active"){
+      const initialProjects = projectState.getAllProjects();
+      for(const project of initialProjects) {
+        this.addProject(project);
       }
     }
   }
-}
 
-@Template("<h1></h1>", "root")
-class Person {
-  name:string = "Alex";
+  addProject(project: Project) {
+    const projectContent = project.render();
 
-  constructor(){
-    console.log("Constructing");
+    const li = this.singleProjectWrapper.cloneNode(true) as HTMLElement;
+
+    li.innerHTML = projectContent;
+
+    li.setAttribute("data-id", project.id.toString());
+    li.setAttribute("draggable", "true");
+    li.addEventListener("dragstart", this.drag);
+
+    this.projectListElement.prepend(li);
   }
-}
 
-const alex = new Person();
-console.log(alex);
-
-
-
-
-function Log(target: any, propertyName: string | Symbol) {
-  console.log("_________");
-  console.log(target);
-  console.log(propertyName);
-}
-
-function Log2(target: any, name: string, descriptor: PropertyDescriptor) {
-  console.log("_________");
-  console.log(target);
-  console.log(name);
-  console.log(descriptor);
-}
-
-function Log3(target: any, name: string, position: number) {
-  console.log("_________1");
-  console.log(target);
-  console.log(name);
-  console.log(position);
-}
-
-class Course {
-  @Log
-  title: string;
-  id: number;
-  description: string;
-  private _attendees_number: number = 0;
-
-  @Log2
-  set attendees (attendee: number){
-    if(attendee > 0){
-      this._attendees_number = attendee;
+  setupListeners() {
+    if(this.type === "active"){
+      projectState.listeners.push(
+        (project: Project, type : string) => {
+          if(type === "add") {
+            this.addProject(project);
+          }
+        }
+      );
     }
   }
-
-  get attendees(){
-    return this._attendees_number;
-  }
-
-  constructor(title: string, description: string) {
-    this.title = title;
-    this.description = description;
-    this.id = Math.floor(Math.random() * 100);
-  }
-
-  @Log2
-  getIncome(@Log3 price: number) {
-    return this._attendees_number * price;
-  }
 }
 
 
-function Autobind(_: any, _2: string | any, descriptior: PropertyDescriptor) {
-  const originalMethod = descriptior.value;
-  const adjustedDescriptor: PropertyDescriptor = {
-    configurable: true,
-    enumerable: false,
-    get() {
-      const boundFunction = originalMethod.bind(this);
-      return boundFunction;
-    }
-  }
-
-  return adjustedDescriptor;
-}
-
-class Printer {
-  message = "Clicked times: ";
-  counter = 0;
-
-  @Autobind
-  showMessage() {
-    console.log(this.message + this.counter++);
-  }
-}
-
-const buttonPrinter = new Printer();
-
-const button = document.querySelector('button')!;
-console.log(button);
-
-button.addEventListener("click", buttonPrinter.showMessage);
+const projectInput = new ProjectInput('project-input', 'app');
+const activeProjects = new ProjectList('project-list', 'app', "single-project", "active");
+const finishedProjects = new ProjectList('project-list', 'app',"single-project", "finished");
