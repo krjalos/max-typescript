@@ -1,13 +1,5 @@
-namespace App {
-  export enum Status {Active, Finished}
 
-  export type ProjectType = {
-    id: number;
-    title:string;
-    description:string;
-    people:number;
-    status: Status;
-  }
+  export enum Status {Active, Finished}
 
   export type ProjectCoreType = {
     title:string;
@@ -24,7 +16,3 @@ namespace App {
     min?: number;
     max?: number;
   }
-
-  export type Listener = (project: Project, type: "add" | "toggle") => void;
-
-}
