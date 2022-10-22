@@ -1,4 +1,4 @@
-import {Status, ProjectCoreType, Field} from './types.js';
+import {Status, ProjectCoreType, Field} from './types';
 
 export type Listener = (project: Project, type: "add" | "toggle") => void;
 
