@@ -5,8 +5,7 @@ module.exports = {
   entry: './src/app.ts',
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'),
-    publicPath: 'dist'
+    path: path.resolve(__dirname, 'dist')
   },
   module: {
     rules: [
@@ -19,5 +18,12 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.js']
+  },
+  devServer: {
+    static: {
+      directory: path.join(__dirname, 'public'),
+    },
+    compress: true,
+    port: 8080,
   }
 };
