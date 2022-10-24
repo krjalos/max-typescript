@@ -41,8 +41,7 @@ export default class MapHandler {
 
   handleAddress(address: string) {
 
-    // console.log(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(address)}&key=${MapHandler.apiKey}`);
-    axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(address)}&key=${MapHandler.apiKey}`).then((response:AxiosResponse)=> {
+    axios.get<{status: "OK" | string, results: {geometry: {location: {lat:number, lng: number}}}[]}>(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(address)}&key=${MapHandler.apiKey}`).then((response:AxiosResponse)=> {
       const map = MapHandler.map;
 
       map.setCenter(response.data.results[0].geometry.location);
